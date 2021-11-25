@@ -1,1 +1,1 @@
-Repositório de testes no Kubernetes
+Repositório de testes e aprendizado no Kubernetes
