@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-prod-service
+  namespace: jenkins-prod-ns
+spec:
+  selector:
+    app: jenkins-prod
+    environment: prod
+  ports:
+  - name: jks-prd-def
+    port: 8080
+    targetPort: 8080
+  - name: jks-prd-node
+    port: 50000
+    targetPort: 50000

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-prod-deployment
+  namespace: jenkins-prod-ns
+  labels:
+    app: jenkins-prod-deployment
+    environment: prod
+spec:
+  selector:
+    matchLabels:
+      app: jenkins-prod
+      environment: prod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins-prod
+        environment: prod
+    spec:
+      initContainers:
+        - name: volume-permissions
+          image: busybox
+          command: ['sh', '-c', 'chmod -R g+rwX /bitnami']
+          volumeMounts:
+          - mountPath: /bitnami
+            name: jenkins-prod-data
+      containers:
+      - name: jenkins-prod
+        image: bitnami/jenkins:2.277.4-debian-10-r19
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "2000Mi"
+            cpu: "1000m"
+          requests:
+            memory: "500Mi"
+            cpu: "300m"
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000
+        envFrom:
+          - secretRef:
+              name: jenkins-prod-secrets
+        volumeMounts:
+          - mountPath: /bitnami/jenkins
+            name: jenkins-prod-data
+      volumes:
+        - name: jenkins-prod-data
+          persistentVolumeClaim:
+            claimName: jenkins-prod-pvc

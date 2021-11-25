@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-prod-pvc
+  namespace: jenkins-prod-ns
+spec:
+  resources:
+    requests:
+      storage: 6Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: pv-002

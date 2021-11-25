@@ -1,0 +1,7 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: jenkins-prod-issuer
+  namespace: jenkins-prod-ns
+spec:
+  selfSigned: {}

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jenkins-prod-ingress
+  labels:
+    app: jenkins-prod-ingress
+    environment: prod
+spec:
+  tls:
+  - hosts:
+    - jenkins-dkc.com
+    secretName: jenkins-prod-certificate-selfsigned
+  rules:
+  - host: jenkins-dkc.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: jenkins-prod-service
+            port: 
+              name: jks-prd-def

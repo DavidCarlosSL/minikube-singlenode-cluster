@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgsql-dev-deployment
+  namespace: pgsql-dev-ns
+  labels:
+    app: pgsql-dev-deployment
+    environment: dev
+spec:
+  selector:
+    matchLabels:
+      app: pgsql-dev
+      environment: dev
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pgsql-dev
+        environment: dev
+    spec:
+      containers:
+        - name: pgsql-dev
+          image: postgres:14
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests: 
+              cpu: "1000m"
+              memory: "400Mi"
+            limits:
+              cpu: "2000m"
+              memory: "2500Mi"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: pgsql-dev-root-password
+            - configMapRef:
+                name: pgsql-dev-cm
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pgsql-dev-data
+      volumes:
+        - name: pgsql-dev-data
+          persistentVolumeClaim:
+            claimName: pgsql-dev-pvc
